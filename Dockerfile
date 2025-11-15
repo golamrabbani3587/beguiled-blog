@@ -1,12 +1,22 @@
+# ---- Build Stage ----
+FROM node:22 AS builder
 
-FROM node:22.10.10
 WORKDIR /app
 
-# Copy only production dependencies
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+RUN npm run build
+
+# ---- Production Stage ----
+FROM node:22 AS production
+
+WORKDIR /app
+
 COPY package*.json ./
 RUN npm install --omit=dev
 
-# Copy built dist/
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
