@@ -7,7 +7,7 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-RUN npm run build
+RUN npm run build   # builds TypeScript → dist/
 
 # ---- Production Stage ----
 FROM node:22 AS production
@@ -21,4 +21,4 @@ COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
 
-CMD ["node", "dist/main.js"]
+CMD ["npm", "run", "start:prod"]   # run compiled JS
